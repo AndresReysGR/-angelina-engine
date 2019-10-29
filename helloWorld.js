@@ -14,3 +14,9 @@ const main = ()=>{
 }
 
 window.onload = main;
+
+/*Sheider se parece mas al c que al c++. no nos vamos a meter harcaro al respecto, 
+oslo vamos a copiar un sheider la respecto
+idican como se hara el sombreado el colorado de algo
+el paradigma que mas se usa para el sheider es el "lamber"= una iluminacion sombre eel sombreado sobre algo
+una luz, la direccion o el angulo odne se posisona, depende de "lightdirection" y las nomrlaes de un objetof*/
