@@ -38,15 +38,63 @@ const loadShader = (gl, type, source)=>{
 const initShader =(gl,vsSource, fsSource)=>{
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource)
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource)
+  const shaderProgram = gl.createProgram();
+
+  //SE agrego un shader attach
+  gl.attachShader(shaderProgram, vertexShader);
+  gl.attachShader(shaderProgram, fragmentShader);
+  
+  //ya esta, el vertex y el program, este se liga, para que el OPGl, para ienviar informacion cargada.
+  gl.linkProgram(shaderProgram);
+
+  if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+    alert('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram));
+    return null;
+  }
+  return shaderProgram;
+}
+
+const initBuffers= gl =>{
+      const positionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      const positions = [
+        -1.0,  1.0,
+         1.0,  1.0,
+        -1.0, -1.0,
+         1.0, -1.0,
+      ];
+      gl.bufferData(gl.ARRAY_BUFFER, 
+                    new Float32Array(positions),
+                    gl.STATIC_DRAW);
+       return {
+         position: positionBuffer,
+         };                          
 }
 
 const main = ()=>{
-    const gl = canvas.getContext("webgl");
+    const gl = canvas.getContext("webgl2");
     if (!gl) {
         alert("Unable to initialize WebGL. Your browser or machine may not support it.");
         return;
       }
-      initShader(gl, vsSource, fsSource)
+      const shaderProgram =initShader(gl, vsSource, fsSource)
+
+      //informacion  basica
+      const programInfo ={
+        program : shaderProgram,
+        attribLocations: {
+          vertexPosition: gl.getAttribLocation(shaderProgram,'aVertexPosition'),
+        },
+        uniformLocations: {
+          projectionMatrix: gl.getUniformLocation(shaderProgram, 'uPojectionMatrix'),
+          modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
+        },
+
+
+      };
+      
+      const buffers = initBuffers(gl);
+
       //Esto se tiene que aprender si o si
       //agrega el color con el que se limpia
       gl.clearColor(0, 0, 0, 1);
