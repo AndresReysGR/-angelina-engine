@@ -71,6 +71,16 @@ const initBuffers= gl =>{
          };                          
 }
 
+const drawScene = (gl, programInfo, buffers)=>{
+  gl.clearColor(0.0, 0.0, 0.0, 1.0); 
+  gl.clearDepth(1.0); //sirve para borrar todo
+  gl.enable(gl.DEPTH_TEST); // habilita la profundidad, habilita para colocar capas o colcoar un obejeto sobre otro,
+  gl.depthFunc(gl.LEQUAL);   //obscuresimiento de las cosas , lo que estras de un objeto, lo obsucurese, es decir, se sobre pone.
+
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); //limpiar los buffer(Capas)
+
+}
+
 const main = ()=>{
     const gl = canvas.getContext("webgl2");
     if (!gl) {
@@ -95,9 +105,11 @@ const main = ()=>{
       
       const buffers = initBuffers(gl);
 
+      drawScene(gl, programInfo, buffers);
+
       //Esto se tiene que aprender si o si
       //agrega el color con el que se limpia
-      gl.clearColor(0, 0, 0, 1);
+     // gl.clearColor(0, 0, 0, 1);
       //Este limpia
       gl.clear(gl.COLOR_BUFFER_BIT);
 }
