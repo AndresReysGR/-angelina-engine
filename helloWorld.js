@@ -79,7 +79,16 @@ const drawScene = (gl, programInfo, buffers)=>{
 
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); //limpiar los buffer(Capas)
 
+  //Camara(generar)
+  const fieldOfView = 45 * Math.PI / 180; //en radiales
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;//altura y ancho del canvas
+  const zNear = 0.1; //serca empieza a ver
+  const zFar = 100.0; //lejos termina de ver
+  const projectionMatrix = mat4.create();
+  mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);  
 }
+
+
 
 const main = ()=>{
     const gl = canvas.getContext("webgl2");
