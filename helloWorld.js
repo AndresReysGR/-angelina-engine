@@ -86,6 +86,11 @@ const drawScene = (gl, programInfo, buffers)=>{
   const zFar = 100.0; //lejos termina de ver
   const projectionMatrix = mat4.create();
   mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);  
+
+  const modelViewMatrix = mat4.create();
+      mat4.translate(modelViewMatrix,  //matriz destino
+                        modelViewMatrix, 
+                       [-0.0, 0.0, -6.0]); //vectro con el que se hara el cambio
 }
 
 
