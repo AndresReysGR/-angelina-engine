@@ -83,15 +83,66 @@ const drawScene = (gl, programInfo, buffers)=>{
   const fieldOfView = 45 * Math.PI / 180; //en radiales
   const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;//altura y ancho del canvas
   const zNear = 0.1; //serca empieza a ver
-  const zFar = 100.0; //lejos termina de ver
+  const zFar = 100; //lejos termina de ver
   const projectionMatrix = mat4.create();
-  mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);  
+  
+  mat4.perspective(
+    projectionMatrix, 
+    fieldOfView, 
+    aspect, 
+    zNear, 
+    zFar
+  );  
 
   const modelViewMatrix = mat4.create();
-      mat4.translate(modelViewMatrix,  //matriz destino
-                        modelViewMatrix, 
-                       [-0.0, 0.0, -6.0]); //vectro con el que se hara el cambio
+      mat4.translate(
+        modelViewMatrix,  //matriz destino
+        modelViewMatrix, 
+        [-0.0, 0.0, -6.0]
+      ); //vectro con el que se hara el cambi
+
+  {
+
+    //make kuad
+    const numComponents = 2;
+    const type = gl.FLOAT;
+    const normalize = false; //si hay una variable menor a un decimal nu legara mas de 1 a -1; sirve para mantener la direccion
+    const stride = 0;  //cuantos bytes tendra el texto
+    const offset = 0; //van del  lado del boffer que se cargara
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position); //agaarre el bindbuffer y lo cambie por los buffer
+    gl.vertexAttribPointer(
+      programInfo.attribLocations.vertexPosition,
+      numComponents,
+      type,
+      normalize,
+      stride,
+      offset);   //se arrasstra el resto de los componentes que se fueron añadiendo en caad uno
+    gl.enableVertexAttribArray(
+      programInfo.attribLocations.vertexPosition);
+                    
+  }
+  //para decirle al WebGl cuandose esta haciendo
+  gl.useProgram(programInfo.program);
+
+  //que use el shader que fue añadido
+  gl.uniformMatrix4fv(
+    programInfo.uniformLocations.projectionMatrix,
+    false,
+    projectionMatrix);
+
+  gl.uniformMatrix4fv(
+      programInfo.uniformLocations.modelViewMatrix,
+      false,
+      modelViewMatrix);
+
+      {  
+        const offset = 0;
+        const vertexCount = 4;
+        gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount);
+      }
+
 }
+
 
 
 
@@ -112,9 +163,7 @@ const main = ()=>{
         uniformLocations: {
           projectionMatrix: gl.getUniformLocation(shaderProgram, 'uPojectionMatrix'),
           modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
-        },
-
-
+        }
       };
       
       const buffers = initBuffers(gl);
@@ -125,7 +174,7 @@ const main = ()=>{
       //agrega el color con el que se limpia
      // gl.clearColor(0, 0, 0, 1);
       //Este limpia
-      gl.clear(gl.COLOR_BUFFER_BIT);
+      //gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
 
